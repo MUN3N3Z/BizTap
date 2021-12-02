@@ -1,0 +1,54 @@
+<!--Login template adapted from https://vidyasheela.com/component/transparent-login-page-template-in-html-and-css -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- For google icons  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <title>Login form</title>
+    
+    <link href="/static/styles.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <h2>Login Form</h2>
+        <form action="/login">
+
+            <div class="form-item">
+                <span class="material-icons-outlined">
+                    account_circle
+                    </span>
+                <input type="text" name="text" id="text" placeholder="username or email">
+            </div>
+
+            <div class="form-item">
+                <span class="material-icons-outlined">                   
+                    lock
+                    </span>
+                <input type="password" name="pass" id="pass" placeholder="password">
+
+            </div>
+
+            <button type="submit"> LOGIN </button>
+            <p> Or Login Using</p>
+            <div class="options">
+                <button class="fb">Facebook</button>
+                <button class="gl">Google</button>
+            </div>
+            <p>New User? <a href="#">Create an account</a></p>
+        </form>
+
+    </div>
+
+</body>
+
+</html>
