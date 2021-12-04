@@ -1,0 +1,65 @@
+<!--Register template adapted from https://vidyasheela.com/component/transparent-login-page-template-in-html-and-css -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- For google icons  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <title>Register</title>
+    
+    <link href="/static/styles.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <h2>Registration Form</h2>
+    <ul class=flashes>
+        <form action="/register" method="post">
+
+            <div class="form-item">
+                <span class="material-icons-outlined">
+                    account_circle
+                    </span>
+                <input type="text" name="username" id="username" placeholder="Username">
+            </div>
+
+            <div class="form-item">
+                <span class="material-icons-outlined">
+                    account_circle
+                    </span>
+                <input type="text" name="email" id="email" placeholder="Email">
+            </div>
+
+            <div class="form-item">
+                <span class="material-icons-outlined">                   
+                    lock
+                    </span>
+                <input type="password" name="password" id="password" placeholder="Password">
+
+            </div>
+
+            <div class="form-item">
+                <span class="material-icons-outlined">                   
+                    lock
+                    </span>
+                <input type="password" name="confirmation" id="confirmation" placeholder="Confirm password">
+
+            </div>
+
+            <button type="submit"> REGISTER </button>
+            
+        </form>
+
+    </div>
+
+</body>
+
+</html>
