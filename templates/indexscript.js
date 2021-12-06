@@ -1,6 +1,3 @@
-app.get('/templates/indexscript.js', function (req, res) {
-    res.sendFile(path.join(__dirname, 'templates', 'indexscript.js'));
-  });
 
 // Used to toggle the menu on small screens when clicking on the menu button
 function myFunction() {

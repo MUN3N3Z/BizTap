@@ -1,4 +1,3 @@
-import os
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -6,8 +5,9 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from helpers import apology, login_required
+from .forms import InventoryForm
+
 
 # Configure application
 app = Flask(__name__)
@@ -28,6 +28,10 @@ Session(app)
 @app.route("/")
 @login_required
 def index():
+        
+        # Identify current user
+        id = session["user_id"]
+
         return render_template("index.html")
     
 @app.route("/login", methods = ["POST", "GET"])
@@ -41,7 +45,7 @@ def login():
                 
                 # Ensure username was submitted
                 if not request.form.get("username"):
-                        return apology("must provide passoword", 400)
+                        return apology("must provide username", 400)
 
                 # Ensure password was submitted
                 elif not request.form.get("password"):
@@ -59,6 +63,7 @@ def login():
 
                 # Redirect user to home page
                 return redirect("/")
+        # User reached route via GET
         else:
                 return render_template("login.html")
 
@@ -105,3 +110,40 @@ def register():
 
                 # Redirect user to home page
                 return redirect("/") 
+
+@app.route("/accounting", methods=["GET", "POST"])
+@login_required
+def accounting():
+        return render_template("accounting.html")
+
+        
+
+@app.route("/inventory", methods=["GET", "POST"])
+@login_required
+def inventory():
+        # Get Flash form
+        form = InventoryForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+                
+                # Obtain data fields from the form
+                name = form.stock_name.data
+                units = form.stock_unit.data
+                limit = form.stock_lowest.data
+
+                # Render template with Inventory table
+                render_template("inventory.html", name=name, units=units, limit=limit)
+        else:
+
+                return render_template("inventory.html")
+
+@app.route("/employees", methods=["GET", "POST"])
+@login_required
+def employees():
+        return render_template("employees.html")
+
+@app.route("/socials", methods=["GET", "POST"])
+@login_required
+def socials():
+        return render_template("socials.html")
+
