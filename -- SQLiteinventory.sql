@@ -1,0 +1,4 @@
+-- SQLite
+CREATE TABLE inventory (id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, units INTEGER NOT NULL, lower_limit INTEGER);
+
+SELECT * FROM inventory;
