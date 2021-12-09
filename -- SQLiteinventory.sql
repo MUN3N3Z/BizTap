@@ -1,4 +1,8 @@
 -- SQLite
 CREATE TABLE inventory (id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, units INTEGER NOT NULL, lower_limit INTEGER);
 
-SELECT * FROM inventory;
+ALTER TABLE inventory ADD COLUMN user_id INTEGER;
+
+ALTER TABLE inventory ADD COLUMN time;
+
+UPDATE inventory SET time = CURRENT_TIMESTAMP;

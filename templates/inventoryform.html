@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 
-{% block content %}
+{% block main %}
 
     <div class="form-wrapper">
       <h2 class="title">Inventory</h2>
 
-      <form method="POST" action="{{ url_for('inventory') }}">
+      <form method="post" action="/inventoryform">
 
           <fieldset class="form-field">
               {{ form.stock_name.label }}

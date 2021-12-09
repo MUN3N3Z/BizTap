@@ -1,5 +1,5 @@
 import os
-from cs50 import SQL
+import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask.helpers import url_for
 from flask_session import Session
@@ -8,6 +8,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
 from forms import InventoryForm
+from cs50 import SQL
 
 # Configure application
 app = Flask(__name__, instance_relative_config=False)
@@ -18,7 +19,8 @@ SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
 # Configure users database
-db = SQL("sqlite:///users.db")
+db = sqlite3.connect("users.db", check_same_thread=False)
+db = db.cursor()
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -117,64 +119,78 @@ def register():
                 return redirect("/") 
 
 # Configure inventory database
-db_inventory = SQL("sqlite:///inventory.db")
+db_inventory = sqlite3.connect("inventory.db", check_same_thread=False)
+db_inventory = db_inventory.cursor()
 
 @app.route('/inventory', methods=["GET", "POST"])
+@login_required
 def inventory():
+        return render_template("inventory.html")
 
+        
+
+
+@app.route('/inventoryform', methods=["GET", "POST"])
+@login_required
+def inventoryform():
         # Get form object
         form = InventoryForm()
 
-        render_template('inventory.html', form=form)
-
-        if form.validate_on_submit() and request.method == "POST":
+        if request.method == "POST" and form.validate_on_submit():
 
                 # Get data from the form
                 name = form.stock_name.data
                 units = form.stock_unit.data
-                limit = form.stock_unit.data
+                limit = form.stock_lowest.data
                 
                 # Get data from inventory page
                 rows = db_inventory.execute("SELECT * FROM inventory WHERE name = ?", name)
 
+                # Get user ID
+                id = session["user_id"]
+
                 # Check whether stock exits and update inventory table with data
-                # Doesn't exist
-                if not name == rows[0][" name"]:
+                # Stock doesn't exist
+                if not name == rows[0]["name"]:
 
                         # Update inventory database with new data
-                        db_inventory.execute("INSERT INTO inventory (name, units, lower_limit) VALUES (?, ?, ?)", name, units, limit)
+                        db_inventory.execute("INSERT INTO inventory (name, units, lower_limit, user_id) VALUES (?, ?, ?, ?)", name, units, limit, id)
+
+                        return render_template("inventory.html")
                 
                 # Stock already exists
                 else:
                         # Update existing row
                         db_inventory.execute("UPDATE inventory SET units = ?, limit = ? WHERE name = ?",units, limit, name )
                 
-                return render_template("inventory.html", form=form)
+                return render_template("inventory.html")
 
+        # Request method is "Get"
         else:
-                return render_template("inventory.html", form=form)
-        
+                return render_template("inventoryform.html", form=form)
+
+
+
+@app.route("/inventorytable", methods=["GET", "POST"])
+@login_required
+def inventorytable():
+
+        # Get user ID
+        id = session["user_id"]
+
+        # Get data from database
+        rows = db_inventory.execute("SELECT * FROM inventory WHERE user_id = ? ORDER by time DESC", id)
+        return render_template("inventorytable.html", rows)
+
 
 
 
 @app.route("/accounting", methods=["GET", "POST"])
 @login_required
 def accounting():
-        return render_template("accounting.html")
 
+        return render_template("balancesheet.html")
 
-        # if request.method == 'POST' and form.validate():
-                
-        #         # Obtain data fields from the form
-        #         name = form.stock_name.data
-        #         units = form.stock_unit.data
-        #         limit = form.stock_lowest.data
-
-        #         # Render template with Inventory table
-        #         return render_template("inventory.html", name=name, units=units, limit=limit)
-        # else:
-
-        #         return render_template("inventory.html")
 
 @app.route("/employees", methods=["GET", "POST"])
 @login_required

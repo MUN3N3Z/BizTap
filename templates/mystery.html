@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <div class="form-wrapper">
+      <h2 class="title">Inventory</h2>
+
+      <form method="POST" action="{{ url_for('inventory') }}">
+
+          <fieldset class="form-field">
+              {{ form.stock_name.label }}
+              {{ form.stock_name(size=20) }}
+          </fieldset>
+
+          <fieldset class="form-field">
+              {{ form.stock_unit.label }}
+              {{ form.stock_unit }}
+          </fieldset>
+
+          <fieldset class="form-field">
+              {{ form.stock_lowest.label }}
+              {{ form.stock_lowest }}
+          </fieldset>
+
+          {{ form.submit }}
+
+      </form>
+    </div>
+
+{% endblock %}

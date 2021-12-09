@@ -1,29 +1,18 @@
+{% extends "layout.html" %}
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <h2 class="title">Inventory</h2>
-    </head>
-    <body>
 
-        <form method="" action="">
-            <p>
-                {{ form.stock_name.label }}
-                {{ form.stock_name }}
-            </p>
-  
-            <p>
-                {{ form.stock_unit.label }}
-                {{ form.stock_unit }}
-            </p>
-  
-            <p>
-                {{ form.stock_lowest.label }}
-                {{ form.stock_lowest }}
-            </p>
-            <p>
-                {{ form.submit }}
-            </p>
-        </form>
-    </body>
-</html>
+
+{% block title %}
+Inventory
+{% endblock %}
+
+
+{% block main %}
+<div class="w3-container">
+  <h2>Inventory</h2>
+  <p>Update and View inventory</p>
+  <a class="w3-button w3-black" href="/inventoryform">Add/Update Stock</a>
+  <a class="w3-button w3-black" href="/inventorytable">Display inventory</a>
+</div>
+{% endblock %}
+
