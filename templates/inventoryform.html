@@ -5,8 +5,8 @@
     <div class="form-wrapper">
       <h2 class="title">Inventory</h2>
 
-      <form method="post" action="/inventoryform">
-
+      <form method="post" action="" novalidate>
+        {{ form.hidden_tag() }}
           <fieldset class="form-field">
               {{ form.stock_name.label }}
               {{ form.stock_name(size=20) }}

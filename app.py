@@ -1,7 +1,5 @@
 import os
-import sqlite3
-from flask import Flask, flash, redirect, render_template, request, session, url_for
-from flask.helpers import url_for
+from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -10,26 +8,34 @@ from helpers import apology, login_required
 from forms import InventoryForm
 from cs50 import SQL
 
+
 # Configure application
-app = Flask(__name__, instance_relative_config=False)
+app = Flask(__name__)
 
-
-# Set secret key
+# Set Secret key
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+
 # Configure users database
-db = sqlite3.connect("users.db", check_same_thread=False)
-db = db.cursor()
+db = SQL("sqlite:///users.db")
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 # Default homepage
 @app.route("/")
@@ -119,8 +125,7 @@ def register():
                 return redirect("/") 
 
 # Configure inventory database
-db_inventory = sqlite3.connect("inventory.db", check_same_thread=False)
-db_inventory = db_inventory.cursor()
+db_inventory = SQL("sqlite:///inventory.db")
 
 @app.route('/inventory', methods=["GET", "POST"])
 @login_required
@@ -135,39 +140,37 @@ def inventory():
 def inventoryform():
         # Get form object
         form = InventoryForm()
+        if form.validate_on_submit():
 
-        if request.method == "POST" and form.validate_on_submit():
-
-                # Get data from the form
+                 # Get data from the form
                 name = form.stock_name.data
                 units = form.stock_unit.data
                 limit = form.stock_lowest.data
                 
-                # Get data from inventory page
+                 # Get data from inventory page
                 rows = db_inventory.execute("SELECT * FROM inventory WHERE name = ?", name)
 
-                # Get user ID
+                 # Get user ID
                 id = session["user_id"]
 
-                # Check whether stock exits and update inventory table with data
-                # Stock doesn't exist
-                if not name == rows[0]["name"]:
+                 # Check whether stock exits and update inventory table with data
+                 # Stock doesn't exist
+                if rows:
+                
 
-                        # Update inventory database with new data
+                         # Update existing row
+                        db_inventory.execute("UPDATE inventory SET units = ?, lower_limit = ? WHERE name = ?",units, limit, name )
+                
+                 # Stock already exists
+                else:
+                        
+                         # Update inventory database with new data
                         db_inventory.execute("INSERT INTO inventory (name, units, lower_limit, user_id) VALUES (?, ?, ?, ?)", name, units, limit, id)
 
-                        return render_template("inventory.html")
-                
-                # Stock already exists
-                else:
-                        # Update existing row
-                        db_inventory.execute("UPDATE inventory SET units = ?, limit = ? WHERE name = ?",units, limit, name )
-                
                 return render_template("inventory.html")
 
         # Request method is "Get"
-        else:
-                return render_template("inventoryform.html", form=form)
+        return render_template("inventoryform.html", form=form)
 
 
 
@@ -180,7 +183,7 @@ def inventorytable():
 
         # Get data from database
         rows = db_inventory.execute("SELECT * FROM inventory WHERE user_id = ? ORDER by time DESC", id)
-        return render_template("inventorytable.html", rows)
+        return render_template("inventorytable.html", rows=rows)
 
 
 
@@ -202,3 +205,23 @@ def employees():
 def socials():
         return render_template("socials.html")
 
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
+def errorhandler(e):
+    """Handle error"""
+    if not isinstance(e, HTTPException):
+        e = InternalServerError()
+    return apology(e.name, e.code)
+
+
+# Listen for errors
+for code in default_exceptions:
+    app.errorhandler(code)(errorhandler)
