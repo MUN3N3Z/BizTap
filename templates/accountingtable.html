@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Accounting Table
+{% endblock %}
+
+{% block main %}
+<head>
+    <link href="../static/accountingtablestyles.css" rel="stylesheet">
+    <link href="../static/accountingtablestyles.css.map" rel="stylesheet">
+    <link href="../static/fonts/font-awesome-4.7.0/scss/font-awesome.css" rel="stylesheet">
+    <link href="../static/fonts/font-awesome-4.7.0/scss/font-awesome.css.map" rel="stylesheet">
+
+    
+</head>
+<div id="box">
+    <main id="center">
+      <h1>Accounting Data</h1>
+      <table class="pure-table pure-table-horizontal">
+        <thead>
+          <tr>
+            <th>Current Ratio</th>
+            <th>Net Income</th>
+            <th>Quick Ratio</th>
+            <th>Profit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{current_ratio}}</td>
+            <td>{{net_income}}</td>
+            <td>{{quick_ratio}}</td>
+            <td>{{profit}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+    </div>
+{% endblock %}

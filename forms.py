@@ -1,7 +1,8 @@
 """Form object declaration."""
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms.fields.numeric import IntegerField
+from wtforms.validators import DataRequired
 
 class InventoryForm(FlaskForm):
         # Data to be collected and displayed on inventory page
@@ -12,5 +13,10 @@ class InventoryForm(FlaskForm):
 
 class AccountingForm(FlaskForm):
         # Data fields to be displayed
-        expenditure = StringField("Expenditure", [DataRequired()])
-        revenue = StringField("Revenue", [DataRequired()])
+        expenses = IntegerField("Expenses", [DataRequired()])
+        revenue = IntegerField("Revenue", [DataRequired()])
+        sales = IntegerField("Sales", [DataRequired()])
+        assets = IntegerField("Assets", [DataRequired()]) 
+        liabilities = IntegerField("Liabilities", [DataRequired()])
+        inventory = IntegerField("Inventory", [DataRequired()])
+        submit = SubmitField('Submit')

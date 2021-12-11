@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
-from forms import InventoryForm
+from forms import InventoryForm, AccountingForm
 from cs50 import SQL
 
 
@@ -133,11 +133,10 @@ def inventory():
         return render_template("inventory.html")
 
         
-
-
 @app.route('/inventoryform', methods=["GET", "POST"])
 @login_required
 def inventoryform():
+
         # Get form object
         form = InventoryForm()
         if form.validate_on_submit():
@@ -157,7 +156,6 @@ def inventoryform():
                  # Stock doesn't exist
                 if rows:
                 
-
                          # Update existing row
                         db_inventory.execute("UPDATE inventory SET units = ?, lower_limit = ? WHERE name = ?",units, limit, name )
                 
@@ -186,14 +184,98 @@ def inventorytable():
         return render_template("inventorytable.html", rows=rows)
 
 
-
-
 @app.route("/accounting", methods=["GET", "POST"])
 @login_required
 def accounting():
 
-        return render_template("balancesheet.html")
+        return render_template("accounting.html")
 
+@app.route("/accountingform", methods=["GET", "POST"])
+@login_required
+def accountingform():
+
+        # Get the Accounting form 
+        form = AccountingForm()
+
+        if form.validate_on_submit():
+
+                print("ok1")
+
+                # Get data from the form
+                revenue = form.revenue.data
+                expenses = form.expenses.data
+                sales = form.sales.data
+                assets = form.assets.data
+                liabilities = form.liabilities.data
+                inventory = form.inventory.data
+
+                # Get user ID
+                id = session["user_id"]
+
+                # Get data from inventory page
+                rows = db_inventory.execute("SELECT * FROM accounting WHERE user_id = ?", id)
+                print("ok2")
+
+                # If user already exists in accounting table
+                if rows:
+
+                        # Update existing row
+                        db_inventory.execute("UPDATE accounting SET revenue = ?, expenses = ?, sales = ?, assets = ?, liabilities = ?, inventory = ? WHERE id = ?",revenue, expenses, sales, assets, liabilities, inventory, id)
+                        print("ok3")
+
+                
+                # User does not exists
+                else: 
+
+                        # Update inventory database with new data
+                        db_inventory.execute("INSERT INTO accounting (revenue, expenses, sales, assets, liabilities, inventory) VALUES (?, ?, ?, ?, ?, ?)", revenue, expenses, sales, assets, liabilities, inventory)
+                        print("ok4")
+
+                return render_template("accounting.html")
+
+        # Request method is "Get"
+        return render_template("accountingform.html", form=form) 
+
+
+@app.route("/accountingtable", methods=["GET", "POST"])
+@login_required
+def accountingtable():
+
+        # Get the Accounting form 
+        form = AccountingForm()
+
+        # Get user ID
+        id = session["user_id"]
+
+        # Get data from database
+        rows = db_inventory.execute("SELECT * FROM accounting WHERE user_id = ?", id)
+
+        # Check if user has accounting data
+        # User is present
+        if rows:
+                # Get data from rows
+                revenue = rows[0]["revenue"]
+                expenses = rows[0]["expenses"]
+                sales = rows[0]["sales"]
+                assets = rows[0]["assets"]
+                liabilities = rows[0]["liabilities"]
+                inventory = rows[0]["inventory"]
+
+                # Calculate accounting data
+                current_ratio = (assets / liabilities)
+                net_income = (revenue - expenses)
+                quick_ratio = ((assets - inventory) / liabilities)
+                profit = (revenue - expenses)
+
+                # Display table with user's accounting data
+                return render_template("accountingtable.html", current_ratio=current_ratio, net_income=net_income, quick_ratio=quick_ratio, profit=profit)
+
+        # User data not found
+        else:
+
+                return render_template("accountingform.html", form=form)
+
+                
 
 @app.route("/employees", methods=["GET", "POST"])
 @login_required

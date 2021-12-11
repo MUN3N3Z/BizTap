@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <div class="form-wrapper">
+      <h2 class="title">Accounting</h2>
+
+      <form method="post" action="" novalidate>
+        {{ form.hidden_tag() }}
+          <fieldset class="form-field">
+              {{ form.revenue.label }}
+              {{ form.revenue }}
+          </fieldset>
+
+          <fieldset class="form-field">
+              {{ form.expenses.label }}
+              {{ form.expenses }}
+          </fieldset>
+
+          <fieldset class="form-field">
+              {{ form.sales.label }}
+              {{ form.sales }}
+          </fieldset>
+
+          <fieldset class="form-field">
+            {{ form.assets.label }}
+            {{ form.assets }}
+          </fieldset>
+
+          <fieldset class="form-field">
+            {{ form.liabilities.label }}
+            {{ form.liabilities }}
+          </fieldset>
+          <fieldset class="form-field">
+            {{ form.inventory.label }}
+            {{ form.inventory }}
+          </fieldset>
+
+          {{ form.submit }}
+
+      </form>
+    </div>
+
+{% endblock %}
