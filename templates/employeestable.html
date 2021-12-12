@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Employees Schedule
+{% endblock %}
+
+{% block main %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <link rel="stylesheet" href="../static/employees/css/style.css">
+
+  <script>
+    function randomImg(){
+    var randomNumber = Math.floor(Math.random() * 10) + 1;
+    var imgName = randomNumber + ".jpg";
+    document.getElementById("imageid").src= "../static/employees/images" + "/" + imgName ;
+ }
+  </script>
+
+  </head>
+  <body>
+  <section class="ftco-section">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-12">
+                  <h4 class="text-center mb-4">Employees Schedule</h4>
+                  <div class="table-wrap">
+                      <table class="table table-bordered text-center">
+            <thead>
+              <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in rows %}
+              <tr>
+                <td><i class="fa fa-close"></i></td>
+                <td class="text-center"><div class="img rounded-circle mb-2" style="background-image: url(../static/employees/images/1.jpg);"></div>
+                  <a href="#"><strong>{{"%s %s" % ("Name:", row["name"])}}</strong> <br>
+                    {{"%s %i" % ("Age:", row["age"])}} <br>
+                    {{"%s %i" % ("Salary:", row["salary"])}} <br>
+                    {{"%s %i" % ("Hours/Week:", row["hours"])}} <br>
+                    {{"%s %i" % ("ID Number:", row["id_number"])}} <br>
+                    {{"%s %s" % ("Leave Day:", row["days"])}}</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+              </tr>
+            </tfoot>
+          </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <script src="../static/employees/js/jquery.min.js"></script>
+<script src="../static/employees/js/popper.js"></script>
+<script src="../static/employees/js/bootstrap.min.js"></script>
+<script src="../static/employees/js/main.js"></script>
+
+  </body>
+{% endblock %}

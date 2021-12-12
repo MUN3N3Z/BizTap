@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
-from forms import InventoryForm, AccountingForm
+from forms import InventoryForm, AccountingForm, EmployeesForm
 from cs50 import SQL
 
 
@@ -199,7 +199,6 @@ def accountingform():
 
         if form.validate_on_submit():
 
-                print("ok1")
 
                 # Get data from the form
                 revenue = form.revenue.data
@@ -214,14 +213,12 @@ def accountingform():
 
                 # Get data from inventory page
                 rows = db_inventory.execute("SELECT * FROM accounting WHERE user_id = ?", id)
-                print("ok2")
 
                 # If user already exists in accounting table
                 if rows:
 
                         # Update existing row
-                        db_inventory.execute("UPDATE accounting SET revenue = ?, expenses = ?, sales = ?, assets = ?, liabilities = ?, inventory = ? WHERE id = ?",revenue, expenses, sales, assets, liabilities, inventory, id)
-                        print("ok3")
+                        db_inventory.execute("UPDATE accounting SET revenue = ?, expenses = ?, sales = ?, assets = ?, liabilities = ?, inventory = ? WHERE user_id = ?",revenue, expenses, sales, assets, liabilities, inventory, id)
 
                 
                 # User does not exists
@@ -229,7 +226,6 @@ def accountingform():
 
                         # Update inventory database with new data
                         db_inventory.execute("INSERT INTO accounting (revenue, expenses, sales, assets, liabilities, inventory) VALUES (?, ?, ?, ?, ?, ?)", revenue, expenses, sales, assets, liabilities, inventory)
-                        print("ok4")
 
                 return render_template("accounting.html")
 
@@ -280,7 +276,74 @@ def accountingtable():
 @app.route("/employees", methods=["GET", "POST"])
 @login_required
 def employees():
+
         return render_template("employees.html")
+
+
+@app.route("/employeesform", methods=["GET", "POST"])
+@login_required
+def employeesform():
+
+        # Get form
+        form = EmployeesForm()
+
+        if form.validate_on_submit():
+
+                # Get data from form
+                name = form.name.data
+                age = form.age.data
+                salary = form.salary.data
+                hours = form.hours.data
+                id_number = form.id_number.data
+                days = form.days.data
+
+                # Get user ID
+                id = session["user_id"]
+
+                # Get data from employees table
+                rows = db.execute("SELECT * FROM employees WHERE id_number = ?", id_number)
+
+                 # If user already exists in accounting table
+                if rows:
+
+                        # Update existing row
+                        db.execute("UPDATE employees SET name = ?, age = ?, salary = ?, hours = ?, id_number = ?, days = ? WHERE id_number = ?", name, age, salary, hours, id_number, days, id_number)
+
+                
+                # User does not exists
+                else: 
+
+                        # Update employees database with new data
+                        db.execute("INSERT INTO employees (name, age, salary, hours, id_number, days, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)", name, age, salary, hours, id_number, days, id)
+
+                return render_template("employees.html")
+
+        # Request method is "Get"
+        return render_template("employeesform.html", form=form) 
+
+
+@app.route("/employeestable", methods=["GET", "POST"])
+@login_required
+def employeestable():
+
+        # Get the Employees form 
+        form = EmployeesForm()
+
+        # Get user ID
+        id = session["user_id"]
+
+        # Get data from database
+        rows = db.execute("SELECT * FROM employees WHERE user_id = ?", id)
+
+        # Check if user has employees data
+        # User is present
+        if rows:
+
+                return render_template("employeestable.html", rows=rows)
+        else:
+
+                return render_template("employeesform.html", form=form)
+
 
 @app.route("/socials", methods=["GET", "POST"])
 @login_required

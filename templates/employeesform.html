@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <div class="form-wrapper">
+      <h2 class="title">Employee Data</h2>
+
+      <form method="post" action="" novalidate>
+        {{ form.hidden_tag() }}
+          <fieldset class="form-field">
+              {{ form.name.label }}
+              {{ form.name }}
+          </fieldset>
+
+          <fieldset class="form-field">
+              {{ form.age.label }}
+              {{ form.age }}
+          </fieldset>
+
+          <fieldset class="form-field">
+              {{ form.salary.label }}
+              {{ form.salary }}
+          </fieldset>
+          <fieldset class="form-field">
+            {{ form.hours.label }}
+            {{ form.hours }}
+          </fieldset>
+          <fieldset class="form-field">
+            {{ form.id_number.label }}
+            {{ form.id_number }}
+          </fieldset>
+          <fieldset class="form-field">
+            {{ form.days.label }}
+            {{ form.days }}
+          </fieldset>
+
+          {{ form.submit }}
+
+      </form>
+    </div>
+
+{% endblock %}

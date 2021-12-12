@@ -23,3 +23,14 @@ INSERT INTO inventory(id,name, units, lower_limit, user_id, time)
   FROM _table1_old;
 
 DROP TABLE 
+
+CREATE TABLE employees
+( id INTEGER NOT NULL UNIQUE PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  name TEXT UNIQUE NOT NULL UNIQUE,
+  age INTEGER NOT NULL,
+  salary INTEGER NOT NULL,
+  hours INTEGER NOT NULL,
+  id_number INTEGER UNIQUE NOT NULL,
+  days TEXT NOT NULL
+);

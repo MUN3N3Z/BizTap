@@ -1,9 +1,18 @@
 {% extends "layout.html" %}
 
-{% block title %}
-    Employees
-{% endblock %}
 
-{% block main %}
+
+{% block title %}
 Employees
 {% endblock %}
+
+
+{% block main %}
+<div class="w3-container">
+  <h2>Inventory</h2>
+  <p>Employee Management</p>
+  <a class="w3-button w3-black" href="/employeesform">Add/Update Employee Information</a>
+  <a class="w3-button w3-black" href="/employeestable">Employees Schedules</a>
+</div>
+{% endblock %}
+
