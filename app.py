@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -344,11 +344,6 @@ def employeestable():
 
                 return render_template("employeesform.html", form=form)
 
-
-@app.route("/socials", methods=["GET", "POST"])
-@login_required
-def socials():
-        return render_template("socials.html")
 
 @app.route("/logout")
 def logout():

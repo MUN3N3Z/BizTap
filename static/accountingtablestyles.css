@@ -1,8 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
-*, *:before, *:after {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
+
 
 html, body {
   margin: 0;
@@ -13,7 +9,7 @@ html, body {
 
 body {
   padding: 5em 1em;
-  background-image: url(http://lh5.googleusercontent.com/-WS8PXb1VNBM/UyoVSVKkppI/AAAAAAAAA2Q/nVNI3smYtcI/w540-h300-no/kids.jpg);
+  background-image: url(../static/backg.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
