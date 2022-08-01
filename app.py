@@ -18,6 +18,7 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 
 # Configure users database
+
 db = SQL("sqlite:///users.db")
 
 # Ensure templates are auto-reloaded
@@ -153,13 +154,13 @@ def inventoryform():
                 id = session["user_id"]
 
                  # Check whether stock exits and update inventory table with data
-                 # Stock doesn't exist
+                 # Stock already exists
                 if rows:
                 
                          # Update existing row
                         db_inventory.execute("UPDATE inventory SET units = ?, lower_limit = ? WHERE name = ?",units, limit, name )
                 
-                 # Stock already exists
+                 # Stock doesn't exist
                 else:
                         
                          # Update inventory database with new data
@@ -168,7 +169,9 @@ def inventoryform():
                 return render_template("inventory.html")
 
         # Request method is "Get"
-        return render_template("inventoryform.html", form=form)
+        else:
+                all_data = db_inventory.execute("SELECT * from inventory")
+                return render_template("inventoryform.html", form=form)
 
 
 
